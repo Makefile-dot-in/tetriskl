@@ -1,0 +1,41 @@
+[
+  {
+    "arguments": [
+      "/nix/store/90h6k8ylkgn81k10190v5c9ldyjpzgl9-gcc-wrapper-12.3.0/bin/g++",
+      "-c",
+      "-std=c++14",
+      "-o",
+      "build/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/home/make/uni/lab/ioption",
+    "file": "/home/make/uni/lab/ioption/src/main.cpp",
+    "output": "/home/make/uni/lab/ioption/build/main.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/90h6k8ylkgn81k10190v5c9ldyjpzgl9-gcc-wrapper-12.3.0/bin/g++",
+      "-c",
+      "-std=c++14",
+      "-o",
+      "build/dirs.o",
+      "src/dirs.cpp"
+    ],
+    "directory": "/home/make/uni/lab/ioption",
+    "file": "/home/make/uni/lab/ioption/src/dirs.cpp",
+    "output": "/home/make/uni/lab/ioption/build/dirs.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/90h6k8ylkgn81k10190v5c9ldyjpzgl9-gcc-wrapper-12.3.0/bin/g++",
+      "-c",
+      "-std=c++14",
+      "-o",
+      "build/game.o",
+      "src/game.cpp"
+    ],
+    "directory": "/home/make/uni/lab/ioption",
+    "file": "/home/make/uni/lab/ioption/src/game.cpp",
+    "output": "/home/make/uni/lab/ioption/build/game.o"
+  }
+]
