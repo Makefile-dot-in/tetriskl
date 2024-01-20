@@ -1,7 +1,6 @@
 .PHONY: all clean
 .SUFFIXES:
 
-CXX = g++
 CXX_SOURCES = \
 src/main.cpp \
 src/dirs.cpp \

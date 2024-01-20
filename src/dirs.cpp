@@ -10,7 +10,7 @@ namespace tetriskl {
 
     std::string get_path_stem(std::string path) {
         std::string::size_type idx = path.rfind(PATH_SEPARATOR);
-        if (idx == std::string::npos) return "";
+        if (idx == std::string::npos) return ".";
 
         return std::string(std::move(path), 0, idx);
     }

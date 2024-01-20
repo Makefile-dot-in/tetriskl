@@ -68,7 +68,7 @@ namespace tetriskl {
         sf::Vector2u origin = size;
         switch (rot) {
         case Rotation::NONE: return p;
-        case Rotation::DEG90: return sf::Vector2u(p.y, size.x - 1 - p.y);
+        case Rotation::DEG90: return sf::Vector2u(p.y, size.x - 1 - p.x);
         case Rotation::DEG180: return sf::Vector2u(size.x - 1 - p.x, size.y - 1 -  p.y);
         case Rotation::DEG270: return sf::Vector2u(size.y - 1 - p.y, p.x);
         }
@@ -105,32 +105,37 @@ namespace tetriskl {
         rotates = true;
     }
 
-    void Tetromino::rotate_ccw(CellGrid &grid, sf::Vector2u &pos) {
+    void Tetromino::rotate_to(CellGrid &grid, sf::Vector2u &pos, Rotation new_rot) {
         if (!rotates) return;
         Rotation old_rot = rot;
         sf::Vector2u old_pos = pos;
         for (const sf::Vector2i wall_kick : {sf::Vector2i(0, 0), sf::Vector2i(1, 0), sf::Vector2i(-1, 0)}) {
             sf::Vector2u rotated_origin_pre = rotate_point(rot, rot_origin, unrot_size);
-
-            rot = (Rotation)(((int)rot + 1) % NUM_ROTATIONS);
-
+            rot = new_rot;
             sf::Vector2u rotated_origin_post = rotate_point(rot, rot_origin, unrot_size);
+            sf::Vector2i new_pos = sf::Vector2i(pos + rotated_origin_pre - rotated_origin_post) + wall_kick;
 
-            pos = pos + rotated_origin_pre - rotated_origin_post;
-
-            if (!grid.can_place(pos, *this)) {
+            if (new_pos.x < 0 || new_pos.y < 0 || !grid.can_place(sf::Vector2u(new_pos), *this)) {
                 rot = old_rot;
                 pos = old_pos;
+                continue;
             }
+
+            pos = sf::Vector2u(new_pos);
+            break;
         }
     }
 
+    void Tetromino::rotate_ccw(CellGrid &grid, sf::Vector2u &pos) {
+        Rotation new_rot = (Rotation) (((int) rot + 1) % NUM_ROTATIONS);
+        rotate_to(grid, pos, new_rot);
+    }
+
     void Tetromino::rotate_cw(CellGrid &grid, sf::Vector2u &pos) {
-        Rotation old_rot = rot;
-        rot = (rot == Rotation::NONE)
+        Rotation new_rot = (rot == Rotation::NONE)
             ? Rotation::DEG270
             : (Rotation)((int)rot - 1);
-        if (!grid.can_place(pos, *this)) rot = old_rot;
+        rotate_to(grid, pos, new_rot);
     }
 
     void TetrominoProvider::reshuffle() {

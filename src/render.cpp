@@ -49,7 +49,8 @@ namespace tetriskl {
             // draw falling piece
             if (falling_piece_active) {
                 sf::RenderStates falling_piece_states = cstates;
-                falling_piece_states.transform.translate(sf::Vector2f(falling_piece_pos - Tetris::cells_render_start));
+                falling_piece_states.transform.translate(sf::Vector2f(falling_piece_pos)
+                                                         - sf::Vector2f(Tetris::cells_render_start));
 
                 target.draw(falling_piece, falling_piece_states);
             }
@@ -146,11 +147,12 @@ namespace tetriskl {
         action_text.setPosition(active_indicator_bounds.width + indicator_padding,
                                 menu_action_bounds.height/2.f - action_text_bounds.height/2.f);
 
-        target.draw(active_indicator, states);
+        if (this->active) target.draw(active_indicator, states);
         target.draw(action_text, states);
     }
 
     void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+        target.clear(background_color);
         std::size_t page = active_item_idx / Menu::actions_per_page;
         std::size_t action_range_start_idx = page * Menu::actions_per_page;
         std::size_t action_range_end_idx = std::min(action_range_start_idx + Menu::actions_per_page, actions.size());
@@ -162,7 +164,10 @@ namespace tetriskl {
 
         float width = 0;
         float height = 0;
-        if (this->title != nullptr) height += title_height;
+        if (this->title != nullptr) {
+            height += title_height;
+            width = std::max(width, title_bounds.width);
+        }
         for (std::size_t i = action_range_start_idx; i < action_range_end_idx; i++) {
             actions[i]->set_font(*font);
             sf::FloatRect bounds = actions[i]->get_bounds();

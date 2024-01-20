@@ -20,6 +20,7 @@ namespace tetriskl {
         sf::Clock evtloop_timer;
         bool game_over;
         unsigned int score;
+        bool closed;
 
         const static sf::Time evtloop_period;
         TetrominoProvider provider;
@@ -39,7 +40,8 @@ namespace tetriskl {
         void process_key(sf::RenderWindow &rw, sf::Keyboard::Key key);
         bool move(sf::Vector2i dir);
         void reset();
-
+        void pause(sf::RenderWindow &rw);
+        void close();
         void award_points(unsigned int lines_cleared);
         void clear_lines(sf::RenderWindow &rw);
         void flash_lines(sf::RenderWindow &rw, unsigned int *lines, std::size_t num_lines);

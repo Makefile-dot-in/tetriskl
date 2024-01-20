@@ -1,5 +1,6 @@
 #include "game.h"
 #include "tetro.h"
+#include "menu.h"
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
@@ -41,6 +42,9 @@ namespace tetriskl {
             case sf::Keyboard::Right:
                 move(sf::Vector2i(1, 0));
                 break;
+            case sf::Keyboard::Escape:
+                pause(rw);
+                break;
             default:;
             }
         } else {
@@ -70,6 +74,23 @@ namespace tetriskl {
 
         *this = std::move(new_this);
     }
+
+    void Tetris::pause(sf::RenderWindow &rw) {
+        tetriskl::Menu menu;
+        menu
+            .set_font(*font)
+            .set_title("GAME PAUSED. CONTINUE?")
+            .add_menu_item(tetriskl::menu_action("YES", [] (auto& rw, auto& menu) { menu.close(); }))
+            .add_menu_item(tetriskl::menu_action("QUIT GAME", [&] (auto& rw, auto& menu) { menu.close(); this->close(); }))
+            .run(rw);
+
+    }
+
+    void Tetris::close() {
+        this->closed = true;
+    }
+
+
 
     void Tetris::award_points(unsigned int lines_cleared) {
         switch (lines_cleared) {
@@ -136,6 +157,7 @@ namespace tetriskl {
           evtloop_timer(),
           game_over(false),
           score(0),
+          closed(false),
           provider() {
         for (int i = 0; i < 2; i++)
             new_piece();
@@ -146,14 +168,14 @@ namespace tetriskl {
     }
 
     void Tetris::run(sf::RenderWindow &rw) {
-        while (rw.isOpen()) {
+        while (!this->closed && rw.isOpen()) {
             evtloop_timer.restart();
 
             sf::Event ev;
             while (rw.pollEvent(ev)) {
                 switch (ev.type) {
                 case sf::Event::Closed:
-                    rw.close();
+                    pause(rw);
                     break;
                 case sf::Event::KeyPressed:
                     process_key(rw, ev.key.code);

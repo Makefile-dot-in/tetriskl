@@ -133,6 +133,8 @@ namespace tetriskl {
         sf::Vector2u rot_origin;
         Rotation rot;
         bool rotates;
+
+        void rotate_to(CellGrid &grid, sf::Vector2u &pos, Rotation new_rot);
     public:
         Tetromino();
         Tetromino(init_list<init_list<Cell>>);
